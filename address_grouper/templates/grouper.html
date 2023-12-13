@@ -2,6 +2,35 @@
 {% set active_page = "index" %}
 {% block title %}Address Grouper WebApp{% endblock %}
 {% block content %}
-<h1>Hello World!</h1>
-<h2>Welcome to FlaskApp!</h2>
+<h1>Address Grouper WebApp</h1>
+<h2>AJAX</h2>
+<div id="container">
+    <div id="input-form">
+        <form id="file-form" method="post" enctype="multipart/form-data">
+            <label for="csv-manual">CSV Manual input</label><textarea name="input-area" form="file-form" id="csv-manual"></textarea>
+            <input type="file" id="csv-file" name="address-csv" accept=".csv"/>
+            <button class="btn" type="submit" name="send-button">Split By Address</button>
+        </form>
+    </div>
+    <div id="output" class="hidden"></div>
+</div>
 {% endblock %}
+{% block script %}
+<script type="text/javascript">
+    let fileForm = document.getElementById('file-form');
+    fileForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        let xhr = new XMLHttpRequest();
+        xhr.open('post', '/', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                alert('success');
+            }
+        };
+
+        let formData = new FormData(fileForm);
+        xhr.send(formData);
+    })
+</script>
+{% endblock script %}

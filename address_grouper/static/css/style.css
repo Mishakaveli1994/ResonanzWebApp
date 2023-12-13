@@ -28,7 +28,6 @@ nav {
 }
 
 #nav-ul li {
-    margin: 0 10px;
     display: flex;
 }
 
@@ -51,4 +50,47 @@ nav a {
 
 main {
     margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+div#container {
+    display: flex;
+    flex-direction: column;
+}
+
+#file-form, #output {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px;
+}
+
+#form {
+
+}
+
+#output {
+
+}
+
+textarea {
+    width: 500px;
+    height: 200px;
+}
+
+.btn {
+    padding: 10px 30px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: solid 1px;
+}
+
+#output.hidden {
+    display: none;
+}
+
+#csv-file{
+    padding: 10px;
 }
