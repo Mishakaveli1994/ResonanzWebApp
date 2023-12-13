@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header>
+    {% block header %}
+    <nav>
+        <ul id="nav-ul">
+            <li class="nav-item"><a  class="{{ 'nav-item-link active' if active_page == 'index' else 'nav-item-link'}}" href="/">Address Grouper</a></li>
+            <li class="nav-item"><a class="{{ 'nav-item-link active' if active_page == 'about' else 'nav-item-link'}}" href="/about">About</a></li>
+        </ul>
+    </nav>
+    {% endblock header %}
+</header>
+<main>
+    {% block content %}
+    {% endblock content %}
+</main>
+</body>
+</html>
+
+
