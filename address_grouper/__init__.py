@@ -2,7 +2,8 @@ import os
 
 from flask import Flask, render_template, request
 from werkzeug.utils import secure_filename
-from utils.reader import pandas_reader, polars_reader
+from .utils.reader import pandas_reader, polars_reader, standard_text_reader
+
 
 def create_web_app(config=None):
     # Create a Flask instance and configure it to use relative paths
@@ -32,9 +33,9 @@ def create_web_app(config=None):
             print(request.form['input-area'])
             if request.files['address-csv']:
                 file = request.files['address-csv']
-                #pandas_reader(file.stream)
-                polars_reader(file.stream)
-                # print(file.read())
+                # print(pandas_reader(file.stream))
+                # print(polars_reader(file.stream))
+                print(standard_text_reader(file.stream))
                 # for i in file.stream:
                 #     print(i.decode('utf-8'))
 
