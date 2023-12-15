@@ -43,9 +43,16 @@ def fuzzy_compare(row, addresses, threshold=65):
     highest_score = 0
     for address in addresses:
         score = fuzz.ratio(row, address)
-
         if score > highest_score:
             highest_score = score
             best_match = address
 
     return best_match if highest_score >= threshold else None
+
+
+def create_address_lower(address: str) -> str:
+    return address.lower().replace(" ", '')
+
+
+def sort_and_format_names(name_list):
+    return '\n'.join(sorted([", ".join(sorted(set(i))) for i in name_list], key=lambda x: x[0]))

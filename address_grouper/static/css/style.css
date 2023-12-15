@@ -1,5 +1,5 @@
 html {
-    font-family: Helvetica, Arial, sans-;
+    font-family: Helvetica, Arial, serif;
 }
 
 body {
@@ -67,12 +67,8 @@ div#container {
     margin: 30px;
 }
 
-#form {
-
-}
-
 #output {
-
+    margin: 0;
 }
 
 textarea {
@@ -87,10 +83,6 @@ textarea {
     border: solid 1px;
 }
 
-/*#output.hidden {*/
-/*    display: none;*/
-/*}*/
-
 #csv-file {
     padding: 10px;
 }
@@ -101,3 +93,10 @@ textarea {
     width: 260px;
     justify-content: space-between;
 }
+
+#output-div {
+    display: flex;
+    flex-direction: inherit;
+    align-items: center;
+}
+

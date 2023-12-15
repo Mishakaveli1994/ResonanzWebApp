@@ -7,15 +7,12 @@ def create_web_app(config=None):
     # Create a Flask instance and configure it to use relative paths
 
     app = Flask(__name__, instance_relative_config=True)
-    UPLOAD_FOLDER = app.root_path + 'static/files'
-    ALLOWED_EXTENSIONS = {'csv'}  # TODO: Check file format
     # TODO: Check size of uploaded files
     app.config.from_mapping(
         SECRET_KEY='development',  # TODO: Change to UUID when finalizing
         static_url_path='',
         static_folder='static',
         template_folder='templates',
-        UPLOAD_FOLDER=UPLOAD_FOLDER,
     )
 
     if config is None:
@@ -53,12 +50,10 @@ def create_web_app(config=None):
 
 
 # TODO: Animation while loading output. Test with delay
-# TODO: Toggle between send file and send via text
 # TODO: Display the time it took the commands to complete to compare performance
 # TODO: Add function descriptions and types
 # TODO: Trim before and after spaces
 # TODO: Display error if no input or input at both fields
 # TODO: Refresh inputs on send
 # TODO: Check if CSV is valid
-# TODO: Finish Sorting function
 app = create_web_app()
