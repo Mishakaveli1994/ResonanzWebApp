@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 import io
 from .utils.reader import processors
 import logging
+import uuid
 
 logging.basicConfig(
     level=logging.DEBUG,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
@@ -13,14 +14,15 @@ logger = logging.getLogger('basic')
 
 # Set urllib logging to WARNING so it only display messages on error'
 logging.getLogger('urllib3').setLevel(logging.WARNING)
+logging.getLogger('werkzeug').setLevel(logging.WARNING)
+
 
 def create_web_app(config=None):
     # Create a Flask instance and configure it to use relative paths
 
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
-        SECRET_KEY='development',  # TODO: Change to UUID when finalizing
-        static_url_path='',
+        SECRET_KEY=str(uuid.uuid4()),
         static_folder='static',
         template_folder='templates',
     )
@@ -67,5 +69,6 @@ def create_web_app(config=None):
         return render_template('404.html')
 
     return app
+
 
 app = create_web_app()

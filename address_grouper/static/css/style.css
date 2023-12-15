@@ -58,6 +58,8 @@ main {
 div#container {
     display: flex;
     flex-direction: column;
+    width: 80%;
+    align-items: center;
 }
 
 #file-form, #output {
@@ -65,7 +67,7 @@ div#container {
     flex-direction: column;
     align-items: center;
     margin: 30px;
-    width: 500px;
+    width: 100%;
 }
 
 #output {
@@ -91,7 +93,7 @@ textarea {
 #data-processor {
     padding: 0 0 10px 0;
     display: flex;
-    width: 260px;
+    width: 60%;
     justify-content: space-between;
 }
 
@@ -100,11 +102,14 @@ textarea {
     position: relative;
     flex-direction: inherit;
     align-items: center;
+    width: 70%;
 }
 
 textarea {
     width: 300px;
     resize: none !important;
+    height: 300px;
+    border: 1px solid !important;
 }
 
 #loading-spinner {
@@ -124,6 +129,17 @@ textarea {
     white-space: nowrap;
 }
 
-#tom-shrug{
+#tom-shrug {
     width: 1000px;
+}
+
+#input-form {
+    width: 50%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+#formFile {
+    width: 50%;
 }

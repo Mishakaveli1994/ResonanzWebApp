@@ -99,15 +99,24 @@
     });
 
     document.getElementById("download-button").addEventListener("click", function () {
-        let dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(document.getElementById("output").value);
-        let downloadAnchorNode = document.createElement("a");
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "data.txt");
-        document.body.appendChild(downloadAnchorNode);
-
-        // Trigger the download
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove(); // Remove the temporary element
+        $.confirm({
+            title: "Confirm!",
+            content: "Do you want to download the sorted .txt file?",
+            buttons: {
+                confirm: function () {
+                    // User confirmed, proceed with the download
+                    let dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(document.getElementById("output").value);
+                    let downloadAnchorNode = document.createElement("a");
+                    downloadAnchorNode.setAttribute("href", dataStr);
+                    downloadAnchorNode.setAttribute("download", "data.txt");
+                    document.body.appendChild(downloadAnchorNode);
+                    downloadAnchorNode.click();
+                    downloadAnchorNode.remove(); // Remove the temporary element
+                },
+                cancel: function () {
+                }
+            }
+        });
     });
 
 </script>

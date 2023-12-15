@@ -25,7 +25,7 @@ def get_runtime(func):
         dataset = func(*args, **kwargs)
         elapsed = time.time() - started
         str_elapsed = str(datetime.timedelta(seconds=int(elapsed)))
-        logger.info(f"\n{func.__name__} -> Time elapsed: {str_elapsed}")
+        logger.info(f"{func.__name__} -> Time elapsed: {str_elapsed}")
         return {'output': dataset, 'elapsed': str_elapsed}
 
     return wrapper
