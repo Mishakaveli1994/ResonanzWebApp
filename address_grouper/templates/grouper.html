@@ -72,6 +72,12 @@
             alert("Error: Both textbox and file attached. Please select only one source of input");
             return;
         }
+
+        if (!fileInput["type"]) {
+            alert("Folders are not allowed. Please select files only.");
+            return;
+        }
+
         $("#loading-spinner").show();
         $("#output").disabled = true;
         $.ajax({
