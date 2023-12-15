@@ -65,6 +65,7 @@ div#container {
     flex-direction: column;
     align-items: center;
     margin: 30px;
+    width: 500px;
 }
 
 #output {
@@ -96,7 +97,20 @@ textarea {
 
 #output-div {
     display: flex;
+    position: relative;
     flex-direction: inherit;
     align-items: center;
 }
 
+textarea {
+    width: 300px;
+}
+
+#loading-spinner {
+    position: absolute;
+    display: none;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    z-index: 10; /* Ensure it's above other content */
+}

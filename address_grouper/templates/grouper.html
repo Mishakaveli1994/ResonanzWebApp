@@ -7,26 +7,30 @@
 <div id="container">
     <div id="input-form">
         <form id="file-form" method="post" enctype="multipart/form-data">
-            <p>Choose an Option:</p>
+            <p>Choose an DataFrame Processor:</p>
             <div id="data-processor">
                 <div class="data-option">
-                    <input type="radio" id="polars-df" name="processor" value="polars">
-                    <label for="polars-df">Polars</label><br>
+                    <input type="radio" class="form-check-input" id="polars-df" name="processor" value="polars">
+                    <label for="polars-df" class="form-check-label">Polars</label><br>
                 </div>
                 <div class="data-option">
-                    <input type="radio" id="pandas-df" name="processor" value="pandas" checked="checked">
-                    <label for="pandas-df">Pandas</label><br>
+                    <input type="radio" class="form-check-input" id="pandas-df" name="processor" value="pandas"
+                           checked="checked">
+                    <label for="pandas-df" class="form-check-label">Pandas</label><br>
                 </div>
             </div>
 
 
-            <label for="csv-manual">CSV Manual input</label><textarea name="input-area" form="file-form" class="form-control"
-                                                                      id="csv-manual"></textarea>
-            <input type="file" id="csv-file" name="address-csv" accept=".csv"/>
+            <label for="csv-manual">CSV Manual input</label><textarea name="input-area" form="file-form"
+                                                                      class="form-control" id="csv-manual"></textarea>
+            <label for="formFile" class="form-label">Default file input example</label>
+            <input class="form-control" type="file" id="formFile" name="address-csv" accept=".csv">
+
             <button class="btn btn-primary" type="submit" name="send-button">Split By Address</button>
         </form>
     </div>
-    <div id="output-div" class="hidden">
+    <div id="output-div">
+        <img src="{{ url_for('static', filename='images/spinner.gif') }}" id="loading-spinner" alt="spinner">
         <label for="output">Output</label>
         <p id="timer">Time</p>
         <textarea name="input-area" class="form-control" id="output"></textarea>
@@ -35,10 +39,8 @@
 {% endblock %}
 {% block script %}
 <script type="text/javascript">
-    document.getElementById('file-form').addEventListener('submit', function (event) {
+    $('#file-form').on('submit', function (event) {
         event.preventDefault(); // Prevent the default form submit action
-
-        // let error = false;
 
         let formData = new FormData(this);
         let manualInput = formData.get('input-area') ? formData.get('input-area') : null;
@@ -47,39 +49,38 @@
 
         if (fileInput['size'] > 10000) {
             alert('File too large (> 10 MB). Please choose a smaller file.');
-            return
+            return;
         }
 
         if (!manualInput && !fileName) {
             alert('Error: No data provided in textbox and no file attached');
-            return
+            return;
         }
 
         if (manualInput && fileName) {
             alert('Error: Both textbox and file attached. Please select only one source of input');
-            return
+            return;
         }
-
-        fetch('/', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => {
-                if (!response.ok) {
-                    alert('Invalid csv file!');
-                    throw new Error('Invalid csv file!');
-                }
-                return response.json();
-            })
-            .then(data => {
-                document.getElementById('output').textContent = data['output'];
-            })
-            .catch(error => {
-                console.error('There has been a problem with your fetch operation:', error);
-                document.getElementById('output').textContent = 'Error: ' + error.message;
-            });
-
-
+        $('#loading-spinner').show();
+        $.ajax({
+            url: '/',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $('#output').text(data['output']);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error('There has been a problem with your fetch operation:', textStatus, errorThrown);
+                $('#output').text('Error: ' + errorThrown);
+            },
+            complete: function () {
+                // Hide the spinner regardless of success or error
+                $('#loading-spinner').hide();document.getElementById("file-form").reset()
+            }
+        });
     });
+
 </script>
 {% endblock script %}
