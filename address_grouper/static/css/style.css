@@ -87,10 +87,17 @@ textarea {
     border: solid 1px;
 }
 
-#output.hidden {
-    display: none;
+/*#output.hidden {*/
+/*    display: none;*/
+/*}*/
+
+#csv-file {
+    padding: 10px;
 }
 
-#csv-file{
-    padding: 10px;
+#data-processor {
+    padding: 0 0 10px 0;
+    display: flex;
+    width: 260px;
+    justify-content: space-between;
 }

@@ -7,7 +7,21 @@
 <div id="container">
     <div id="input-form">
         <form id="file-form" method="post" enctype="multipart/form-data">
-            <label for="csv-manual">CSV Manual input</label><textarea name="input-area" form="file-form" id="csv-manual"></textarea>
+            <p>Choose an Option:</p>
+            <div id="data-processor">
+                <div class="data-option">
+                    <input type="radio" id="polars-df" name="processor" value="polars">
+                    <label for="polars-df">Polars</label><br>
+                </div>
+                <div class="data-option">
+                    <input type="radio" id="pandas-df" name="processor" value="pandas" checked="checked">
+                    <label for="pandas-df">Pandas</label><br>
+                </div>
+            </div>
+
+
+            <label for="csv-manual">CSV Manual input</label><textarea name="input-area" form="file-form"
+                                                                      id="csv-manual"></textarea>
             <input type="file" id="csv-file" name="address-csv" accept=".csv"/>
             <button class="btn" type="submit" name="send-button">Split By Address</button>
         </form>
@@ -17,20 +31,45 @@
 {% endblock %}
 {% block script %}
 <script type="text/javascript">
-    let fileForm = document.getElementById('file-form');
-    fileForm.addEventListener('submit', function (event) {
-        event.preventDefault();
+    // let fileForm = document.getElementById('file-form');
+    // fileForm.addEventListener('submit', function (event) {
+    //     event.preventDefault();
+    //
+    //     let xhr = new XMLHttpRequest();
+    //     xhr.open('post', '/', true);
+    //     xhr.onreadystatechange = function () {
+    //         if (xhr.readyState === 4 && xhr.status === 200) {
+    //             console.log("Result:");
+    //             console.log(result);
+    //         }
+    //     };
+    //
+    //     let formData = new FormData(fileForm);
+    //     xhr.send(formData);
+    // })
+    document.getElementById('file-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent the default form submit action
 
-        let xhr = new XMLHttpRequest();
-        xhr.open('post', '/', true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                alert('success');
-            }
-        };
+        let formData = new FormData(this);
 
-        let formData = new FormData(fileForm);
-        xhr.send(formData);
-    })
+        fetch('/', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(JSON.stringify(data)['output']);
+                document.getElementById('output').textContent = data['output'].split('\n');
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+                document.getElementById('outputDiv').textContent = 'Error: ' + error.message;
+            });
+    });
 </script>
 {% endblock script %}

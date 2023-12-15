@@ -1,8 +1,6 @@
-import os
-
-from flask import Flask, render_template, request
-from werkzeug.utils import secure_filename
-from .utils.reader import pandas_reader, polars_reader, standard_text_reader
+from flask import Flask, render_template, request, jsonify
+import io
+from .utils.reader import processors
 
 
 def create_web_app(config=None):
@@ -30,19 +28,18 @@ def create_web_app(config=None):
     @app.route('/', methods=['GET', 'POST'])
     def main():
         if request.method == 'POST':
-            print(request.form['input-area'])
+            processor_switch = 'pandas-df' if request.form.get('processor') == 'pandas' else 'polars-df'
+            processor = processors[processor_switch]
+            print(f"{processor.__name__} selected")
             if request.files['address-csv']:
                 file = request.files['address-csv']
-                # print(pandas_reader(file.stream))
-                # print(polars_reader(file.stream))
-                print(standard_text_reader(file.stream))
-                # for i in file.stream:
-                #     print(i.decode('utf-8'))
-
-                # read_csv(file.read())
-                # fn = secure_filename(file.filename) # TODO: Remove if unneeded
-                # file.save(os.path.join(app.config['UPLOAD_FOLDER'], fn)) # TODO: Remove if unneeded
-        return render_template('grouper.html')
+                output = processor(file)
+            else:
+                output = processor(io.StringIO(f"{request.form.get('input-area')}"))
+            print(output)
+            return jsonify({'output': output})
+        else:
+            return render_template('grouper.html')
 
     @app.route('/about', methods=['GET'])
     def about():
@@ -57,10 +54,11 @@ def create_web_app(config=None):
 
 # TODO: Animation while loading output. Test with delay
 # TODO: Toggle between send file and send via text
-# TODO: Implement file loop, pandas and polars
-# TODO: Create a switch in HTML that the different modes can be toggled
 # TODO: Display the time it took the commands to complete to compare performance
-# TODO: Create decorator for timing
 # TODO: Add function descriptions and types
-
+# TODO: Trim before and after spaces
+# TODO: Display error if no input or input at both fields
+# TODO: Refresh inputs on send
+# TODO: Check if CSV is valid
+# TODO: Finish Sorting function
 app = create_web_app()
