@@ -1,13 +1,23 @@
 from flask import Flask, render_template, request, jsonify
 import io
 from .utils.reader import processors
+import logging
 
+logging.basicConfig(
+    level=logging.DEBUG,  # Set the logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',  # Set the format of log messages
+    datefmt='%Y-%m-%d %H:%M:%S',  # Set the date format
+)
+
+logger = logging.getLogger('basic')
+
+# Set urllib logging to WARNING so it only display messages on error'
+logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 def create_web_app(config=None):
     # Create a Flask instance and configure it to use relative paths
 
     app = Flask(__name__, instance_relative_config=True)
-    # TODO: Check size of uploaded files
     app.config.from_mapping(
         SECRET_KEY='development',  # TODO: Change to UUID when finalizing
         static_url_path='',
@@ -24,36 +34,38 @@ def create_web_app(config=None):
 
     @app.route('/', methods=['GET', 'POST'])
     def main():
+        """
+        Main route. Handles both GET and POST requests.
+        """
         if request.method == 'POST':
-            processor_switch = 'pandas-df' if request.form.get('processor') == 'pandas' else 'polars-df'
-            processor = processors[processor_switch]
-            print(f"{processor.__name__} selected")
+            processor = processors[request.form.get('processor')]
+            logger.info(f"Processor {processor.__name__} selected")
             if request.files['address-csv']:
                 file = request.files['address-csv']
                 output = processor(file)
             else:
                 output = processor(io.StringIO(f"{request.form.get('input-area')}"))
-            print(output)
-            return jsonify({'output': output})
+            return jsonify(output)
         else:
             return render_template('grouper.html')
 
     @app.route('/about', methods=['GET'])
     def about():
+        """
+        About route - creator and purpose of project page
+        :return:
+        """
         return render_template('about.html')
 
-    @app.errorhandler(404)  # TODO: Implement 404
+    @app.errorhandler(404)
     def page_not_found(e):
+        """
+        404 error handler. Self-explanatory :)
+        :param e: error object (if any)
+        :return:
+        """
         return render_template('404.html')
 
     return app
 
-
-# TODO: Animation while loading output. Test with delay
-# TODO: Display the time it took the commands to complete to compare performance
-# TODO: Add function descriptions and types
-# TODO: Trim before and after spaces
-# TODO: Display error if no input or input at both fields
-# TODO: Refresh inputs on send
-# TODO: Check if CSV is valid
 app = create_web_app()

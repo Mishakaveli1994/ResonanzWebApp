@@ -18,68 +18,96 @@
                            checked="checked">
                     <label for="pandas-df" class="form-check-label">Pandas</label><br>
                 </div>
+                <div class="data-option">
+                    <input type="radio" class="form-check-input" id="dask-df" name="processor" value="dask">
+                    <label for="dask-df" class="form-check-label">Dask</label><br>
+                </div>
             </div>
 
 
             <label for="csv-manual">CSV Manual input</label><textarea name="input-area" form="file-form"
                                                                       class="form-control" id="csv-manual"></textarea>
-            <label for="formFile" class="form-label">Default file input example</label>
+            <label for="formFile" class="form-label">Please provide a .csv input file:</label>
             <input class="form-control" type="file" id="formFile" name="address-csv" accept=".csv">
 
             <button class="btn btn-primary" type="submit" name="send-button">Split By Address</button>
         </form>
     </div>
     <div id="output-div">
-        <img src="{{ url_for('static', filename='images/spinner.gif') }}" id="loading-spinner" alt="spinner">
-        <label for="output">Output</label>
-        <p id="timer">Time</p>
-        <textarea name="input-area" class="form-control" id="output"></textarea>
+        <div id="main-output">
+            <img src="{{ url_for('static', filename='images/spinner.gif') }}" id="loading-spinner" alt="spinner">
+            <label for="output">Output</label>
+            <p id="timer">Time: <span id="time-stan"></span></p>
+            <textarea name="input-area" class="form-control" id="output"></textarea>
+        </div>
+        <div id="download-output">
+            <button class="btn btn-primary" id="download-button"><i class="fa fa-download" aria-hidden="true"></i>
+                Download
+            </button>
+        </div>
     </div>
 </div>
 {% endblock %}
 {% block script %}
 <script type="text/javascript">
-    $('#file-form').on('submit', function (event) {
+    $("#file-form").on("submit", function (event) {
         event.preventDefault(); // Prevent the default form submit action
 
         let formData = new FormData(this);
-        let manualInput = formData.get('input-area') ? formData.get('input-area') : null;
-        let fileInput = formData.get('address-csv');
-        let fileName = fileInput['name'] ? fileInput['name'] : null;
+        let manualInput = formData.get("input-area") ? formData.get("input-area") : null;
+        let fileInput = formData.get("address-csv");
+        let fileName = fileInput["name"] ? fileInput["name"] : null;
 
-        if (fileInput['size'] > 10000) {
-            alert('File too large (> 10 MB). Please choose a smaller file.');
+        if (fileInput["size"] > 10000) {
+            alert("File too large (> 10 MB). Please choose a smaller file.");
             return;
         }
 
         if (!manualInput && !fileName) {
-            alert('Error: No data provided in textbox and no file attached');
+            alert("Error: No data provided in textbox and no file attached");
             return;
         }
 
         if (manualInput && fileName) {
-            alert('Error: Both textbox and file attached. Please select only one source of input');
+            alert("Error: Both textbox and file attached. Please select only one source of input");
             return;
         }
-        $('#loading-spinner').show();
+        $("#loading-spinner").show();
+        $("#output").disabled = true;
         $.ajax({
-            url: '/',
-            type: 'POST',
+            url: "/",
+            type: "POST",
             data: formData,
             processData: false,
             contentType: false,
             success: function (data) {
-                $('#output').text(data['output']);
+                $("#output").text(data["output"]);
+                $("#time-stan").text(data["elapsed"]);
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.error('There has been a problem with your fetch operation:', textStatus, errorThrown);
-                $('#output').text('Error: ' + errorThrown);
+                console.error("There has been a problem with your fetch operation:", textStatus, errorThrown);
+                $("#output").text("Error: " + errorThrown);
             },
             complete: function () {
                 // Hide the spinner regardless of success or error
-                $('#loading-spinner').hide();document.getElementById("file-form").reset()
+                $("#loading-spinner").hide();
+                $("#download-output").css("display", "block");
+                $("#output").disabled = false;
+                $("#file-form").trigger("reset");
             }
         });
+    });
+
+    document.getElementById("download-button").addEventListener("click", function () {
+        let dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(document.getElementById("output").value);
+        let downloadAnchorNode = document.createElement("a");
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "data.txt");
+        document.body.appendChild(downloadAnchorNode);
+
+        // Trigger the download
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove(); // Remove the temporary element
     });
 
 </script>
