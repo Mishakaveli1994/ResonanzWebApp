@@ -30,7 +30,7 @@
             <label for="formFile" class="form-label">Please provide a .csv input file:</label>
             <input class="form-control" type="file" id="formFile" name="address-csv" accept=".csv">
 
-            <button class="btn btn-primary" type="submit" name="send-button">Split By Address</button>
+            <button class="btn btn-primary" type="submit" name="send-button">Group By Address</button>
         </form>
     </div>
     <div id="output-div">
@@ -107,7 +107,7 @@
     document.getElementById("download-button").addEventListener("click", function () {
         $.confirm({
             title: "Confirm!",
-            content: "Do you want to download the sorted .txt file?",
+            content: "Do you want to download the sorted data.txt file?",
             buttons: {
                 confirm: function () {
                     // User confirmed, proceed with the download
