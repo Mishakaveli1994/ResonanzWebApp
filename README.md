@@ -75,7 +75,7 @@ python setup.py install
   those cases
 
 
-* The addresses are converted to lower case and spaces are removed as this provides optimizations for the next step
+* The addresses are converted to lower case as this provides optimizations for the next step
 
 
 * Perform `fuzzy-matching` - an actions that uses the `Levenshtein Distance` measuring algorithm, to calculate the

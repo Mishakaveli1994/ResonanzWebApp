@@ -88,7 +88,7 @@ def create_address_lower(address: str) -> str:
     :param address: Address string
     :return: Lower case, no space version of address
     """
-    return address.lower().replace(" ", '')
+    return address.lower()
 
 
 def sort_and_format_names(name_list: list[list[str]]):
