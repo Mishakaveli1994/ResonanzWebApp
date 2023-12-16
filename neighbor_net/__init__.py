@@ -49,7 +49,7 @@ def create_web_app(config=None):
                 output = processor(io.StringIO(f"{request.form.get('input-area')}"))
             return jsonify(output)
         else:
-            return render_template('grouper.html')
+            return render_template('neighbor_net.html')
 
     @app.route('/about', methods=['GET'])
     def about():
