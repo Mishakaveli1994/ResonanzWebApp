@@ -51,7 +51,7 @@
 {% block script %}
 <script type="text/javascript">
     $("#file-form").on("submit", function (event) {
-        event.preventDefault(); // Prevent the default form submit action
+        event.preventDefault();
 
         let formData = new FormData(this);
         let manualInput = formData.get("input-area") ? formData.get("input-area") : null;
@@ -95,7 +95,6 @@
                 $("#output").text("Error: " + errorThrown);
             },
             complete: function () {
-                // Hide the spinner regardless of success or error
                 $("#loading-spinner").hide();
                 $("#download-output").css("display", "block");
                 $("#output").disabled = false;
@@ -110,14 +109,13 @@
             content: "Do you want to download the sorted data.txt file?",
             buttons: {
                 confirm: function () {
-                    // User confirmed, proceed with the download
                     let dataStr = "data:text/plain;charset=utf-8," + encodeURIComponent(document.getElementById("output").value);
                     let downloadAnchorNode = document.createElement("a");
                     downloadAnchorNode.setAttribute("href", dataStr);
                     downloadAnchorNode.setAttribute("download", "data.txt");
                     document.body.appendChild(downloadAnchorNode);
                     downloadAnchorNode.click();
-                    downloadAnchorNode.remove(); // Remove the temporary element
+                    downloadAnchorNode.remove();
                 },
                 cancel: function () {
                 }
