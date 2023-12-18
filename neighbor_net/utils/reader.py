@@ -8,8 +8,7 @@ import time
 import datetime
 import dask.dataframe as dd
 
-from .helpers import get_runtime, get_base_addresses, fuzzy_compare, translate_address, create_address_lower, \
-    sort_and_format_names
+from .helpers import get_runtime, get_base_addresses, fuzzy_compare, translate_address, sort_and_format_names
 
 from pandas_schema import Column, Schema
 from pandas_schema.validation import LeadingWhitespaceValidation, TrailingWhitespaceValidation
@@ -47,7 +46,7 @@ def dask_reader(file: IO[bytes]) -> str:
     df = dd.from_pandas(df, npartitions=10)
     df['Address'] = df['Address'].apply(lambda x: translate_address(x), meta=('Address', 'string'))
     logger.debug(f"Addressed translated: {str(datetime.timedelta(seconds=int(time.time() - started)))}")
-    df['AddressLower'] = df['Address'].apply(create_address_lower, meta=('AddressLower', 'string'))
+    df['AddressLower'] = df['Address'].str.lower()
     logger.debug(f"Lower created: {str(datetime.timedelta(seconds=int(time.time() - started)))}")
     df['closest_approximate_match'] = df['AddressLower'].apply(fuzzy_compare,
                                                                addresses=get_base_addresses(df['AddressLower']),
@@ -78,7 +77,7 @@ def pandas_reader(file: IO[bytes]) -> str:
 
     df['Address'] = df['Address'].apply(lambda x: translate_address(x))
     logger.debug(f"Addressed translated: {str(datetime.timedelta(seconds=int(time.time() - started)))}")
-    df['AddressLower'] = df['Address'].apply(create_address_lower)
+    df['AddressLower'] = df['Address'].str.lower()
     logger.debug(f"Lower created: {str(datetime.timedelta(seconds=int(time.time() - started)))}")
     df['closest_approximate_match'] = df['AddressLower'].apply(fuzzy_compare,
                                                                addresses=get_base_addresses(df['AddressLower']))
@@ -102,7 +101,7 @@ def polars_reader(file: IO[bytes]) -> str:
     )
     logger.debug(f"Addressed translated: {str(datetime.timedelta(seconds=int(time.time() - started)))}")
     df = df.with_columns(
-        AddressLower=pl.col("Address").map_elements(create_address_lower)
+        AddressLower=pl.col("Address").str.to_lowercase()
     )
     logger.debug(f"Lower created: {str(datetime.timedelta(seconds=int(time.time() - started)))}")
 

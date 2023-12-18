@@ -81,16 +81,6 @@ def fuzzy_compare(row: str, addresses: set, threshold=65) -> str | None:
     return best_match if highest_score >= threshold else None
 
 
-def create_address_lower(address: str) -> str:
-    """
-    Creates a lower case version of an address abd removes spaces
-    Used to simplify strings and optimize fuzz-matching
-    :param address: Address string
-    :return: Lower case, no space version of address
-    """
-    return address.lower()
-
-
 def sort_and_format_names(name_list: list[list[str]]):
     """
     Sorts and formats a list of names
