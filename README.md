@@ -20,8 +20,10 @@ python setup.py install
 * cmd - `set FLASK_APP=neighbor_net`
 * Powershell - `$env:FLASK_APP = "neighbor_net"`
 
-4. Run the web app with:
-   `flask run`
+4. Go into the newly downloaded project: `cd ResonanzWebApp`
+
+
+5. Run the web app with: `flask run`
 
 ## Usage
 
